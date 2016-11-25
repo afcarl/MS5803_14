@@ -38,12 +38,12 @@ public:
 
 	// The argument is the desired oversampling resolution, which has 
 	// values of 256, 512, 1024, 2048, 4096
-    MS_5803(uint8_t I2C_Address=0x76, uint16_t Resolution = 512);
+    MS_5803(uint8_t I2C_Address=0x76);
 
-    MS_5803(i2c_t3 * wire, uint16_t Resolution = 512);
+    MS_5803(i2c_t3 * wire);
 
     // Initialize the sensor 
-    boolean initializeMS_5803(boolean Verbose = true);
+    boolean begin(uint16_t Resolution = 512, boolean Verbose = true);
 
     // Reset the sensor
     void resetSensor();

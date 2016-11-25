@@ -67,30 +67,25 @@ const uint64_t POW_2_37 = 137438953472ULL; // 2^37 = 137438953472
 //-------------------------------------------------
 // Constructors
 
-MS_5803::MS_5803(uint8_t _i2c_addr, uint16_t Resolution) {
+MS_5803::MS_5803(uint8_t _i2c_addr) {
 
     this->i2c_addr = (int)_i2c_addr;
-
-	// The argument is the oversampling resolution, which may have values
-	// of 256, 512, 1024, 2048, or 4096.
-	_Resolution = Resolution;
 }
 
-MS_5803::MS_5803(i2c_t3 * _wire, uint16_t Resolution) {
-
+MS_5803::MS_5803(i2c_t3 * _wire) 
+{
     this->wire = _wire;
 
     this->i2c_addr = MS5803_I2C_ADDRESS_DEFAULT;
-
-	// The argument is the oversampling resolution, which may have values
-	// of 256, 512, 1024, 2048, or 4096.
-	_Resolution = Resolution;
 }
 
 //-------------------------------------------------
-boolean MS_5803::initializeMS_5803(boolean Verbose) {
+boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
+{
+	// The argument is the oversampling resolution, which may have values
+	// of 256, 512, 1024, 2048, or 4096.
+	_Resolution = Resolution;
 
-   
     // Reset the sensor during startup
     resetSensor(); 
     

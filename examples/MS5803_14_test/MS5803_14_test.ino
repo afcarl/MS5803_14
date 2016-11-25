@@ -13,11 +13,7 @@
 // Place the MS5803_14 library folder in your Arduino 'libraries' directory
 #include <MS5803_14.h> 
 
-// Declare 'sensor' as the object that will refer to your MS5803 in the sketch.
-// We use Wire1 here to illustrate choice of I^2C bus.
-// Enter the oversampling value as an argument. Valid choices are
-// 256, 512, 1024, 2048, 4096. Library default = 512.
-MS_5803 sensor = MS_5803(&Wire1, 512);
+MS_5803 sensor = MS_5803(&Wire1);
 
 void setup() {
 
@@ -32,7 +28,7 @@ void setup() {
   // conversion coefficients to the Serial terminal if present.
   // If you don't want all the coefficients printed out, 
   // set sensor.initializeMS_5803(false).
-  if (sensor.initializeMS_5803()) {
+  if (sensor.begin()) {
     Serial.println( "MS5803 CRC check OK." );
   } 
   else {
