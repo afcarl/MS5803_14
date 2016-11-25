@@ -28,14 +28,14 @@
 #ifndef __MS_5803__
 #define __MS_5803__
 
-#include <Arduino.h>
+#include <i2c_t3.h>
 
 class MS_5803 {
-public:
-	// Constructor for the class. 
-    // Simon D. Levy (sdl): added ability to specify I^2C address or 
-    // Wire interface.
 
+public:
+
+	// Constructor for the class. 
+    // Simon D. Levy (sdl): added ability to specify I^2C parameters
     MS_5803(uint8_t address=0x76, uint8_t bus=0, i2c_pins pins=I2C_PINS_18_19, i2c_pullup=I2C_PULLUP_EXT, uint32_t i2cRate=I2C_RATE_400);
 
     // Initialize the sensor 
