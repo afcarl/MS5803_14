@@ -39,7 +39,7 @@ public:
     MS_5803(uint8_t address=0x76, uint8_t bus=0, i2c_pins pins=I2C_PINS_18_19, i2c_pullup=I2C_PULLUP_EXT, uint32_t i2cRate=I2C_RATE_400);
 
     // Initialize the sensor 
-    boolean begin(uint16_t Resolution = 512, boolean Verbose = true);
+    boolean begin(uint16_t resolution = 512, boolean verbose = true);
 
     // Reset the sensor
     void resetSensor();
@@ -52,22 +52,14 @@ public:
     // D1,D2 values after readSensor() has been called
     
     // Return temperature in degrees Celsius.
-    float temperature() const       {return tempC;}  
+    float temperature() const {return tempC;}  
+
     // Return pressure in mbar.
-    float pressure() const          {return mbar;}
-//    // Return temperature in degress Fahrenheit.
-//    float temperatureF() const		{return tempF;}
-//    // Return pressure in psi (absolute)
-//    float psia() const				{return psiAbs;}
-//    // Return pressure in psi (gauge)
-//    float psig() const				{return psiGauge;}
-//    // Return pressure in inHg
-//    float inHg() const				{return inHgPress;}
-//    // Return pressure in mmHg
-//    float mmHg() const				{return mmHgPress;}
+    float pressure() const {return mbar;}
+
     // Return the D1 and D2 values, mostly for troubleshooting
-    unsigned long D1val() const 	{return D1;}
-    unsigned long D2val() const		{return D2;}
+    unsigned long D1val() const {return D1;}
+    unsigned long D2val() const {return D2;}
     
     
 private:
@@ -81,20 +73,18 @@ private:
     
     float mbar; // Store pressure in mbar. 
     float tempC; // Store temperature in degrees Celsius
-//    float tempF; // Store temperature in degrees Fahrenheit
-//    float psiAbs; // Store pressure in pounds per square inch, absolute
-//    float psiGauge; // Store gauge pressure in pounds per square inch (psi)
-//    float inHgPress;	// Store pressure in inches of mercury
-//    float mmHgPress;	// Store pressure in mm of mercury
     unsigned long D1;	// Store D1 value
     unsigned long D2;	// Store D2 value
     int32_t mbarInt; // pressure in mbar, initially as a signed long integer
+
     // Check data integrity with CRC4
     unsigned char MS_5803_CRC(unsigned int n_prom[]); 
+
     // Handles commands to the sensor.
     unsigned long MS_5803_ADC(char commandADC);
+
     // Oversampling resolution
-    uint16_t _Resolution;
+    uint16_t _resolution;
 };
 
 #endif 

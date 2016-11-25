@@ -77,11 +77,11 @@ MS_5803::MS_5803(uint8_t address, uint8_t bus, i2c_pins pins, i2c_pullup pullups
 }
 
 //-------------------------------------------------
-boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
+boolean MS_5803::begin(uint16_t resolution, boolean verbose)
 {
 	// The argument is the oversampling resolution, which may have values
 	// of 256, 512, 1024, 2048, or 4096.
-	_Resolution = Resolution;
+	_resolution = resolution;
 
     // Start I^2C
     i2c_t3(_bus).begin(I2C_MASTER, 0x00, _pins, _pullups, _i2cRate);
@@ -89,11 +89,11 @@ boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
     // Reset the sensor during startup
     resetSensor(); 
     
-    if (Verbose) {
+    if (verbose) {
     	// Display the oversampling resolution or an error message
-    	if (_Resolution == 256 || _Resolution == 512 || _Resolution == 1024 || _Resolution == 2048 || _Resolution == 4096) {
+    	if (_resolution == 256 || _resolution == 512 || _resolution == 1024 || _resolution == 2048 || _resolution == 4096) {
         	Serial.print("Oversampling setting: ");
-        	Serial.println(_Resolution);    		
+        	Serial.println(_resolution);    		
     	} else {
 			Serial.println("*******************************************");
 			Serial.println("Error: specify a valid oversampling value");
@@ -114,7 +114,7 @@ boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
     		LowByte = i2c_t3(_bus).read();
     	}
     	sensorCoeffs[i] = (((unsigned int)HighByte << 8) + LowByte);
-    	if (Verbose){
+    	if (verbose){
 			// Print out coefficients 
 			Serial.print("C");
 			Serial.print(i);
@@ -128,7 +128,7 @@ boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
     // Use a function to calculate the CRC value
     unsigned char n_crc = MS_5803_CRC(sensorCoeffs); 
     
-    if (Verbose) {
+    if (verbose) {
 		Serial.print("p_crc: ");
 		Serial.println(p_crc);
 		Serial.print("n_crc: ");
@@ -148,19 +148,19 @@ void MS_5803::readSensor() {
 	// Choose from CMD_ADC_256, 512, 1024, 2048, 4096 for mbar resolutions
 	// of 1, 0.6, 0.4, 0.3, 0.2 respectively. Higher resolutions take longer
 	// to read.
-	if (_Resolution == 256){
+	if (_resolution == 256){
 		D1 = MS_5803_ADC(CMD_ADC_D1 + CMD_ADC_256); // read raw pressure
 		D2 = MS_5803_ADC(CMD_ADC_D2 + CMD_ADC_256); // read raw temperature	
-	} else if (_Resolution == 512) {
+	} else if (_resolution == 512) {
 		D1 = MS_5803_ADC(CMD_ADC_D1 + CMD_ADC_512); // read raw pressure
 		D2 = MS_5803_ADC(CMD_ADC_D2 + CMD_ADC_512); // read raw temperature		
-	} else if (_Resolution == 1024) {
+	} else if (_resolution == 1024) {
 		D1 = MS_5803_ADC(CMD_ADC_D1 + CMD_ADC_1024); // read raw pressure
 		D2 = MS_5803_ADC(CMD_ADC_D2 + CMD_ADC_1024); // read raw temperature
-	} else if (_Resolution == 2048) {
+	} else if (_resolution == 2048) {
 		D1 = MS_5803_ADC(CMD_ADC_D1 + CMD_ADC_2048); // read raw pressure
 		D2 = MS_5803_ADC(CMD_ADC_D2 + CMD_ADC_2048); // read raw temperature
-	} else if (_Resolution == 4096) {
+	} else if (_resolution == 4096) {
 		D1 = MS_5803_ADC(CMD_ADC_D1 + CMD_ADC_4096); // read raw pressure
 		D2 = MS_5803_ADC(CMD_ADC_D2 + CMD_ADC_4096); // read raw temperature
 	}
@@ -230,19 +230,6 @@ void MS_5803::readSensor() {
 	mbar = (float)mbarInt / 10;
     // Calculate the human-readable temperature in Celsius
     tempC  = (float)TEMP / 100; 
-	
-	
-    // Start other temperature conversions by converting mbar to psi absolute
-//    psiAbs = mbar * 0.0145038;
-//    // Convert psi absolute to inches of mercury
-//    inHgPress = psiAbs * 2.03625;
-//    // Convert psi absolute to gauge pressure
-//    psiGauge = psiAbs - 14.7;
-//    // Convert mbar to mm Hg
-//    mmHgPress = mbar * 0.7500617;
-//    // Convert temperature to Fahrenheit
-//    tempF = (tempC * 1.8) + 32;
-    
 }
 
 //------------------------------------------------------------------
