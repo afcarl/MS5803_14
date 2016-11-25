@@ -7,10 +7,6 @@
   Simon D. Levy 10 November 2016
 */
 
-// The i2c_t3 library carries out I2C communication
-#include <i2c_t3.h>
-
-// Place the MS5803_14 library folder in your Arduino 'libraries' directory
 #include <MS5803_14.h> 
 
 MS_5803 sensor(0x76, 1, I2C_PINS_37_38, I2C_PULLUP_EXT, I2C_RATE_400);
@@ -37,13 +33,9 @@ void setup() {
 }
 
 void loop() {
+
   // Use readSensor() function to get pressure and temperature reading. 
   sensor.readSensor();
-   // Uncomment the print commands below to show the raw D1 and D2 values
-//  Serial.print("D1 = ");
-//  Serial.println(sensor.D1val());
-//  Serial.print("D2 = ");
-//  Serial.println(sensor.D2val());
 
   // Show pressure
   Serial.print("Pressure = ");
