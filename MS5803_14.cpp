@@ -67,16 +67,13 @@ const uint64_t POW_2_37 = 137438953472ULL; // 2^37 = 137438953472
 //-------------------------------------------------
 // Constructors
 
-MS_5803::MS_5803(uint8_t _i2c_addr) {
-
-    this->i2c_addr = (int)_i2c_addr;
-}
-
-MS_5803::MS_5803(i2c_t3 * _wire) 
+MS_5803::MS_5803(uint8_t address, uint8_t bus, i2c_pins pins, i2c_pullup pullups, uint32_t i2cRate)
 {
-    this->wire = _wire;
-
-    this->i2c_addr = MS5803_I2C_ADDRESS_DEFAULT;
+    _address = address;
+    _bus = bus;
+    _pins = pins;
+    _pullups = pullups;
+    _i2cRate = i2cRate;
 }
 
 //-------------------------------------------------
@@ -86,6 +83,9 @@ boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
 	// of 256, 512, 1024, 2048, or 4096.
 	_Resolution = Resolution;
 
+    // Start I^2C
+    i2c_t3(_bus).begin(I2C_MASTER, 0x00, _pins, _pullups, _i2cRate);
+ 
     // Reset the sensor during startup
     resetSensor(); 
     
@@ -105,13 +105,13 @@ boolean MS_5803::begin(uint16_t Resolution, boolean Verbose)
 	// Read sensor coefficients
     for (int i = 0; i < 8; i++ ){
     	// The PROM starts at address 0xA0
-    	this->wire->beginTransmission(this->i2c_addr);
-    	this->wire->write(0xA0 + (i * 2));
-    	this->wire->endTransmission();
-    	this->wire->requestFrom(this->i2c_addr, 2);
-    	while(this->wire->available()) {
-    		HighByte = this->wire->read();
-    		LowByte = this->wire->read();
+    	i2c_t3(_bus).beginTransmission(_address);
+    	i2c_t3(_bus).write(0xA0 + (i * 2));
+    	i2c_t3(_bus).endTransmission();
+    	i2c_t3(_bus).requestFrom((int)_address, 2);
+    	while(i2c_t3(_bus).available()) {
+    		HighByte = i2c_t3(_bus).read();
+    		LowByte = i2c_t3(_bus).read();
     	}
     	sensorCoeffs[i] = (((unsigned int)HighByte << 8) + LowByte);
     	if (Verbose){
@@ -290,9 +290,9 @@ unsigned long MS_5803::MS_5803_ADC(char commandADC) {
 	// a long integer on 8-bit Arduinos.
     long result = 0;
     // Send the command to do the ADC conversion on the chip
-	this->wire->beginTransmission(this->i2c_addr);
-    this->wire->write(CMD_ADC_CONV + commandADC);
-    this->wire->endTransmission();
+	i2c_t3(_bus).beginTransmission(_address);
+    i2c_t3(_bus).write(CMD_ADC_CONV + commandADC);
+    i2c_t3(_bus).endTransmission();
     // Wait a specified period of time for the ADC conversion to happen
     // See table on page 1 of the MS5803 data sheet showing response times of
     // 0.5, 1.1, 2.1, 4.1, 8.22 ms for each accuracy level. 
@@ -315,15 +315,15 @@ unsigned long MS_5803::MS_5803_ADC(char commandADC) {
             break;
     }
     // Now send the read command to the MS5803 
-    this->wire->beginTransmission(this->i2c_addr);
-    this->wire->write((byte)CMD_ADC_READ);
-    this->wire->endTransmission();
+    i2c_t3(_bus).beginTransmission(_address);
+    i2c_t3(_bus).write((byte)CMD_ADC_READ);
+    i2c_t3(_bus).endTransmission();
     // Then request the results. This should be a 24-bit result (3 bytes)
-    this->wire->requestFrom(this->i2c_addr, 3);
-    while(this->wire->available()) {
-    	HighByte = this->wire->read();
-    	MidByte = this->wire->read();
-    	LowByte = this->wire->read();
+    i2c_t3(_bus).requestFrom((int)_address, 3);
+    while(i2c_t3(_bus).available()) {
+    	HighByte = i2c_t3(_bus).read();
+    	MidByte = i2c_t3(_bus).read();
+    	LowByte = i2c_t3(_bus).read();
     }
     // Combine the bytes into one integer
     result = ((long)HighByte << 16) + ((long)MidByte << 8) + (long)LowByte;
@@ -333,8 +333,8 @@ unsigned long MS_5803::MS_5803_ADC(char commandADC) {
 //----------------------------------------------------------------
 // Sends a power on reset command to the sensor.
 void MS_5803::resetSensor() {
-    	this->wire->beginTransmission(this->i2c_addr);
-        this->wire->write(CMD_RESET);
-        this->wire->endTransmission();
+    	i2c_t3(_bus).beginTransmission(_address);
+        i2c_t3(_bus).write(CMD_RESET);
+        i2c_t3(_bus).endTransmission();
     	delay(10);
 }

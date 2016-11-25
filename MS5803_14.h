@@ -36,11 +36,7 @@ public:
     // Simon D. Levy (sdl): added ability to specify I^2C address or 
     // Wire interface.
 
-	// The argument is the desired oversampling resolution, which has 
-	// values of 256, 512, 1024, 2048, 4096
-    MS_5803(uint8_t I2C_Address=0x76);
-
-    MS_5803(i2c_t3 * wire);
+    MS_5803(uint8_t address=0x76, uint8_t bus=0, i2c_pins pins=I2C_PINS_18_19, i2c_pullup=I2C_PULLUP_EXT, uint32_t i2cRate=I2C_RATE_400);
 
     // Initialize the sensor 
     boolean begin(uint16_t Resolution = 512, boolean Verbose = true);
@@ -77,8 +73,11 @@ public:
 private:
 
     // sdl    
-    int i2c_addr; 
-    i2c_t3 * wire;
+    uint8_t    _address;
+    uint8_t    _bus;
+    i2c_pins   _pins;
+    i2c_pullup _pullups;
+    uint32_t   _i2cRate;
     
     float mbar; // Store pressure in mbar. 
     float tempC; // Store temperature in degrees Celsius

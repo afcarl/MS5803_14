@@ -13,12 +13,11 @@
 // Place the MS5803_14 library folder in your Arduino 'libraries' directory
 #include <MS5803_14.h> 
 
-MS_5803 sensor = MS_5803(&Wire1);
+MS_5803 sensor(0x76, 1, I2C_PINS_37_38, I2C_PULLUP_EXT, I2C_RATE_400);
 
 void setup() {
 
-  // Start I2C communications: These pins should agree with the Wire interface you chose above
-  Wire1.begin(I2C_MASTER, 0x00, I2C_PINS_37_38, I2C_PULLUP_EXT, I2C_RATE_400);
+  sensor.begin();
 
   // Start the serial ports.
   Serial.begin(9600); // other values include 9600, 14400, 57600 etc.
