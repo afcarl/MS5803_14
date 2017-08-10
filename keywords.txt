@@ -1,0 +1,8 @@
+MS_5803		KEYWORD1
+begin		KEYWORD2
+resetSensor	KEYWORD2
+readSensor	KEYWORD2
+temperature	KEYWORD2
+pressure	KEYWORD2
+D1val		KEYWORD2
+D2val		KEYWORD2
